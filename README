@@ -21,3 +21,10 @@ THE SOFTWARE.
 ------------------INTRO-------------------
 
 DataConnection.php is a Class to help you make your MySQL query life easier.  It provides you with several methods to preform standard query types.
+
+------------------EXAMPLE-------------------
+
+*a basic select query
+
+$dc = new DataConnection("localhost", "root", "root", "test_db");
+$result = $dc->selectFromQuery("id", "users", "LIMIT 2");
