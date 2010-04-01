@@ -47,9 +47,8 @@ class DataConnection {
 		
 		$query = "SELECT {$colToSelect} FROM {$tableToSelectFrom} WHERE {$colToMatch}{$matchType}'{$valueToMatch}'";
 		if(!is_null($options)){
-			$query." {$options}";
+			$query.=" {$options}";
 		}
-		
 		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
 		if(mysql_num_rows($result) > 0){
 			return $result;
@@ -57,6 +56,28 @@ class DataConnection {
 			return false;
 		}
 		
+	}
+	
+	public function selectFromWhereIn($colToSelect, $tableToSelectFrom, $colToMatch, $inValues, $options){
+		
+		$query = "SELECT {$colToSelect} FROM {$tableToSelectFrom} WHERE {$colToMatch} IN (";
+		for($i = 0; $i < count($inValues) - 1; $i++){
+			$query.= $inValues[$i];
+			if($i < count($inValues) - 1){
+				$query.= ", ";
+			} 
+		}
+		$query.= ")";
+		if(!is_null($options)){
+			$query.=" {$options}";
+		}
+		
+		$result = mysql_query($query, $this->connection) or die('Unable to preform selectFromWhereIn query');
+		if(mysql_num_rows($result) > 0){
+			return $query;
+		} else {
+			return false;
+		}
 	}
 	
 	public function insertIntoQuery($tableToInsertInto, $keyValuePairs, $options){
@@ -85,7 +106,7 @@ class DataConnection {
 		$j = 0;
 		while($j < sizeof($values)){
 			$query.=" '{$values[$j]}'";
-			if($i < sizeof($values) - 1){
+			if($j < sizeof($values) - 1){
 				$query.=",";
 			}
 			$j += 1;
