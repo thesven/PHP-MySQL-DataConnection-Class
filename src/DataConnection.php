@@ -58,6 +58,21 @@ class DataConnection {
 		
 	}
 	
+	public function selectFromWhereNotQuery($colToSelect, $tableToSelectFrom, $colToMatch, $matchType, $valueToMatch, $options){
+		
+		$query = "SELECT {$colToSelect} FROM {$tableToSelectFrom} WHERE NOT {$colToMatch}{$matchType}'{$valueToMatch}'";
+		if(!is_null($options)){
+			$query.=" {$options}";
+		}
+		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
+		if(mysql_num_rows($result) > 0){
+			return $result;
+		} else {
+			return false;
+		}
+		
+	}
+	
 	public function selectFromWhereIn($colToSelect, $tableToSelectFrom, $colToMatch, $inValues, $options){
 		
 		$query = "SELECT {$colToSelect} FROM {$tableToSelectFrom} WHERE {$colToMatch} IN (";
@@ -125,9 +140,19 @@ class DataConnection {
 		}
 	}
 	
-	public function updateQuery($tableToUpdate, $columnToUpdate, $newValue, $options){
+	public function updateQuery($tableToUpdate, $keyValueUpdatePairs, $options){
 		
-		$query = "UPDATE {$tableToUpdate} SET {$columnToUpdate}='{$newValue}'";
+		$query = "UPDATE {$tableToUpdate}";
+		
+		$counter = 0;
+		foreach($keyValueUpdatePairs as $key=>$value){
+			$query .= " SET {$key} = '{$value}'";
+			if($counter < count($keyValueUpdatePairs) - 1){
+				$query .= ",";
+			}
+			$counter += 1;
+		}
+		
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
