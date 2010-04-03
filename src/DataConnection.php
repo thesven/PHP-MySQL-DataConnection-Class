@@ -28,7 +28,7 @@ class DataConnection {
 		mysql_select_db($this->dbaseName, $this->connection) or die('Unable to select database from host');
 	}
 	
-	private funcion _doQuery($query){
+	private function _doQuery($query){
 		return mysql_query($query, $this->connection) or die('Unable to preform query');
 	}
 	
