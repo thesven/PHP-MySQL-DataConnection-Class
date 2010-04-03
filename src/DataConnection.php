@@ -28,13 +28,17 @@ class DataConnection {
 		mysql_select_db($this->dbaseName, $this->connection) or die('Unable to select database from host');
 	}
 	
+	private funcion _doQuery($query){
+		return mysql_query($query, $this->connection) or die('Unable to preform query');
+	}
+	
 	public function selectFromQuery($colToSelect, $tableToSelectFrom, $options){
 		
 		$query = "SELECT {$colToSelect} FROM {$tableToSelectFrom}";
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
-		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
+		$result = $this->_doQuery($query);
 		if(mysql_num_rows($result) > 0){
 			return $result;
 		} else {
@@ -49,7 +53,7 @@ class DataConnection {
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
-		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
+		$result = $this->_doQuery($query);
 		if(mysql_num_rows($result) > 0){
 			return $result;
 		} else {
@@ -64,7 +68,7 @@ class DataConnection {
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
-		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
+		$result = $this->_doQuery($query);
 		if(mysql_num_rows($result) > 0){
 			return $result;
 		} else {
@@ -87,9 +91,9 @@ class DataConnection {
 			$query.=" {$options}";
 		}
 		
-		$result = mysql_query($query, $this->connection) or die('Unable to preform selectFromWhereIn query');
+		$result = $this->_doQuery($query);
 		if(mysql_num_rows($result) > 0){
-			return $query;
+			return $result;
 		} else {
 			return false;
 		}
@@ -132,7 +136,7 @@ class DataConnection {
 			$query.=" {$options}";
 		}
 		
-		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
+		$result = $this->_doQuery($query);
 		if(mysql_affected_rows($this->connection) > 0){
 			return $result;
 		} else {
@@ -156,7 +160,7 @@ class DataConnection {
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
-		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
+		$result = $this->_doQuery($query);
 		if(mysql_affected_rows($this->connection) > 0){
 			return $result;
 		} else {
@@ -172,7 +176,7 @@ class DataConnection {
 			$query.=" {$options}";
 		}
 		echo $query;
-		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
+		$result = $this->_doQuery($query);
 		if(mysql_affected_rows($this->connection)){
 			return $result;
 		} else {
@@ -183,7 +187,7 @@ class DataConnection {
 	public function deleteAllRowsFromTable($tableName){
 		
 		$query = "DELETE FROM {$tableName}";
-		$result = mysql_query($query, $this->connection) or die('Unable to preform query');
+		$result = $this->_doQuery($query);;
 		if(mysql_affected_rows($this->connection) > 0){
 			return $result;
 		} else {
