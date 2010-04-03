@@ -22,6 +22,17 @@ THE SOFTWARE.
 
 DataConnection.php is a Class to help you make your MySQL query life easier.  It provides you with several methods to preform standard query types.
 
+------------------SUPPORTED QUERY TYPES-------------------
+
+- SELECT FROM
+- SELECT FROM WHERE
+- SELECT FROM WHERE NOT
+- SELECT FROM WHERE IN
+- INSERT INTO
+- UPDATE
+- DELETE FROM WHERE
+- Delete all rows from table
+
 ------------------EXAMPLE-------------------
 
 *a basic select query
