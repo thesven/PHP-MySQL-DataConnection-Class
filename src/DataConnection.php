@@ -24,12 +24,8 @@ class DataConnection {
 	}
 	
 	private function _init(){
-		$this->connection = mysql_connect($this->host, $this->user, $this->pass, true) or die('Unable to connect to the database');
+		$this->connection = mysql_connect($this->host, $this->user, $this->pass) or die('Unable to connect to the database');
 		mysql_select_db($this->dbaseName, $this->connection) or die('Unable to select database from host');
-	}
-	
-	private function _doQuery($query){
-		return mysql_query($query, $this->connection) or die('Unable to preform query');
 	}
 	
 	public function selectFromQuery($colToSelect, $tableToSelectFrom, $options){
@@ -38,23 +34,24 @@ class DataConnection {
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
-		$result = $this->_doQuery($query);
-		if(mysql_num_rows($result) > 0){
-			return $result;
-		} else {
+		$result = mysql_query($query, $this->connection) or die(mysql_error());
+		if(mysql_num_rows($result) == 0){
 			return false;
+		} else {
+			return $result;
+			
 		}
 		
 	}
 	
 	public function selectFromWhereQuery($colToSelect, $tableToSelectFrom, $colToMatch, $matchType, $valueToMatch, $options){
 		
-		$query = "SELECT {$colToSelect} FROM {$tableToSelectFrom} WHERE {$colToMatch}{$matchType}'{$valueToMatch}'";
+		$query = "SELECT {$colToSelect} FROM {$tableToSelectFrom} WHERE {$colToMatch} {$matchType} '{$valueToMatch}'";
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
-		$result = $this->_doQuery($query);
-		if(mysql_num_rows($result) > 0){
+		$result = mysql_query($query, $this->connection) or die(mysql_error());
+		if(mysql_num_rows($result) != 0){
 			return $result;
 		} else {
 			return false;
@@ -68,7 +65,7 @@ class DataConnection {
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
-		$result = $this->_doQuery($query);
+		$result = mysql_query($query, $this->connection) or die(mysql_error());
 		if(mysql_num_rows($result) > 0){
 			return $result;
 		} else {
@@ -91,7 +88,7 @@ class DataConnection {
 			$query.=" {$options}";
 		}
 		
-		$result = $this->_doQuery($query);
+		$result = mysql_query($query, $this->connection) or die(mysql_error());
 		if(mysql_num_rows($result) > 0){
 			return $result;
 		} else {
@@ -136,7 +133,7 @@ class DataConnection {
 			$query.=" {$options}";
 		}
 		
-		$result = $this->_doQuery($query);
+		$result = mysql_query($query, $this->connection) or die(mysql_error());
 		if(mysql_affected_rows($this->connection) > 0){
 			return $result;
 		} else {
@@ -149,8 +146,9 @@ class DataConnection {
 		$query = "UPDATE {$tableToUpdate}";
 		
 		$counter = 0;
+		$query .= " SET";
 		foreach($keyValueUpdatePairs as $key=>$value){
-			$query .= " SET {$key} = '{$value}'";
+			$query .= " {$key}='{$value}'";
 			if($counter < count($keyValueUpdatePairs) - 1){
 				$query .= ",";
 			}
@@ -160,7 +158,8 @@ class DataConnection {
 		if(!is_null($options)){
 			$query.=" {$options}";
 		}
-		$result = $this->_doQuery($query);
+		
+		$result = mysql_query($query, $this->connection) or die(mysql_error());;
 		if(mysql_affected_rows($this->connection) > 0){
 			return $result;
 		} else {
@@ -176,7 +175,7 @@ class DataConnection {
 			$query.=" {$options}";
 		}
 		echo $query;
-		$result = $this->_doQuery($query);
+		$result = mysql_query($query, $this->connection) or die(mysql_error());
 		if(mysql_affected_rows($this->connection)){
 			return $result;
 		} else {
@@ -187,7 +186,7 @@ class DataConnection {
 	public function deleteAllRowsFromTable($tableName){
 		
 		$query = "DELETE FROM {$tableName}";
-		$result = $this->_doQuery($query);;
+		$result = mysql_query($query, $this->connection) or die(mysql_error());
 		if(mysql_affected_rows($this->connection) > 0){
 			return $result;
 		} else {
